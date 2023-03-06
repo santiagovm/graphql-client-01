@@ -1,0 +1,5 @@
+query($id: ID!) {
+    team(id: $id) {
+        name
+    }
+}
