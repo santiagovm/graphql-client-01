@@ -1,6 +1,5 @@
-package com.example.graphqlclient01;
+package com.example.graphqlclient01.graphqlapi;
 
-import com.example.graphqlclient01.graphqlapi.GraphQlApiClient;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockResponse;
@@ -18,7 +17,7 @@ import java.nio.charset.Charset;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Slf4j
-class DetailsClientGraphQlTests {
+class GraphQlApiClientTests {
 
     @SneakyThrows
     @Test
@@ -55,7 +54,7 @@ class DetailsClientGraphQlTests {
 
     private static WebClient createWebClient(String baseUrl) {
         return WebClient.builder()
-                .baseUrl(baseUrl)
+                .baseUrl(baseUrl + "/graphql")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }

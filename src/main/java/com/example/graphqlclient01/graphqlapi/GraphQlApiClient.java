@@ -1,11 +1,9 @@
 package com.example.graphqlclient01.graphqlapi;
 
 import com.example.graphqlclient01.ApiClient;
-import com.example.graphqlclient01.graphqlapi.model.GraphQlQuery;
-import com.example.graphqlclient01.graphqlapi.model.GraphQlResponseDto;
 import com.example.graphqlclient01.graphqlapi.model.TeamDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -18,23 +16,20 @@ public class GraphQlApiClient implements ApiClient {
     public String getTeamName(long teamId) {
 
         String query = GraphqlSchemaReaderUtil.getSchemaFromFileName("getTeam");
-        String variables = GraphqlSchemaReaderUtil.getSchemaFromFileName("getTeamVariables");
 
-        var getTeamQuery = new GraphQlQuery();
-        getTeamQuery.setQuery(query);
-        getTeamQuery.setVariables(variables.replace("${id}", Long.toString(teamId)));
+        HttpGraphQlClient graphQlClient = HttpGraphQlClient.create(webClient);
 
-        GraphQlResponseDto<TeamDto> responseDto = webClient.post()
-                .uri("/graphql")
-                .bodyValue(getTeamQuery)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<GraphQlResponseDto<TeamDto>>() {})
+        TeamDto teamDto = graphQlClient
+                .document(query)
+                .variable("id", teamId)
+                .retrieve("team")
+                .toEntity(TeamDto.class)
                 .block();
 
-        if (responseDto == null) {
+        if (teamDto == null) {
             return "";
         }
 
-        return responseDto.getData().getName();
+        return teamDto.getName();
     }
 }

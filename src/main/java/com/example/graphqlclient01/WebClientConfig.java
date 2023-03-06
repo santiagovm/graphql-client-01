@@ -14,7 +14,7 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-                .baseUrl(apiBaseUrl)
+                .baseUrl(apiBaseUrl + "/graphql")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
